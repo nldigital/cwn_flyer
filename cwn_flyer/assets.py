@@ -10,9 +10,9 @@ common_css = Bundle(
         output='public/css/common.css')
 
 common_js = Bundle(
-        'js/vendor/bootstrap.min.js',
         'js/vendor/jquery-3.1.1.slim.min.js',
         'js/vendor/tether.min.js',
+        'js/vendor/bootstrap.min.js',
         Bundle(
             'js/main.js',
             filters='jsmin'

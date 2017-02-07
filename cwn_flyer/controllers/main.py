@@ -98,7 +98,7 @@ def make_schedule(weekno):
     for key in to_del:
         del filtered_results[key]
 
-    return render_template('index.html', slotted_events=filtered_results, weekno=weekno, date=CWN[weekno])
+    return render_template('index.html', slotted_events=filtered_results, weekno=weekno, date=CWN[weekno], title="CoWorking Night Flyer")
 
 def current_week():
     today = datetime.date.today()
