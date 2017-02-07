@@ -4,6 +4,8 @@ import httplib2
 import os
 from apiclient import discovery
 
+import datetime
+
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
@@ -56,12 +58,44 @@ if __name__ == "__main__":
                               discoveryServiceUrl=discoveryUrl)
 
     spreadsheetId = '1cNePpbnqO0slG7FNyGD08EEJv-ihjp3KPSD-IRejrAw'
-    rangeName = 'Events!A:P'
+    rangeName = 'Events!A:R'
     result = service.spreadsheets().values().get(
         spreadsheetId=spreadsheetId, range=rangeName).execute()
 
     values = result.get('values', [])
-    for row in values:
-        if row[0] == "Approved":
+    index_map = {
+            'approved': 0,
+            'cwn': 1,
+            'req_stamp': 2,
+            'group': 3,
+            'title': 4,
+            'description': 5,
+            'category': 6,
+            'icon':7,
+            'date_req': 8,
+            'start_time_req': 9,
+            'room_req': 11,
+            'resources': 12,
+            'series': 13,
+            'duration': 15,
+            'start_time': 16,
+            'end_time': 17,
+            }
+
+    events = []
+    for row in values[1:]:
+        if(len(row) < 18):
             continue
-        print('%s, %s' % (row[0], row[1]))
+        event = {}
+        for k in index_map.keys():
+            event[k] = row[index_map[k]]
+        if event['approved'] == 'TRUE':
+            events.append(event)
+
+    for event in events:
+        event['approved'] = bool(event['approved'])
+        event['cwn'] = int(event['cwn'])
+        event['start_time'] = datetime.datetime.strptime(event['start_time'], "%m/%d/%Y %H:%M:%S")
+        event['end_time'] = datetime.datetime.strptime(event['end_time'], "%m/%d/%Y %H:%M:%S")
+
+    print(events)
