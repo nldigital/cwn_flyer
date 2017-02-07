@@ -1,0 +1,45 @@
+{%extends "base.html"%}
+{%block title%}Stuff{% endblock %}
+
+
+{%block body%}
+
+<div class="jumbotron">
+  <div class="">
+    <h1 class="cwn-logo"><a href="https://coworkingnight.org"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/69546/cwn-logo-light-fullnowatermark.svg" alt="CoWorking Night - Learn. Connect. Collaborate."></a></h1>
+    <p class="cwn-intro">CoWorking Night is a free weekly conference where professionals come to learn, connect, and collaborate.<br> Anyone of any age or background is welcome to attend. No RSVP is required; just show up!</p>
+    <p class="cwn-sponsors"><strong>Sponsored by Real Estate Row and Hackster.io.<br> Presented by New Leaf Digital.</strong></p>
+    <h2 class="cwn-info"><span class="cwn-edition">CoWorking Night #<span class="cwn-edition-number">{{ weekno }}</span></span><span class="cwn-date-time"><span class="cwn-date">{{ date.strftime("%B %d, %Y") }}</span><span class="cwn-time">6‑11pm</span></span><span class="cwn-location">Real Estate Row</span></h2>
+  </div>
+</div>
+
+<div class="container my-2 cwn-schedule">
+  {% for slot,events  in slotted_events.items() %}
+  <div class="time-slot">
+    <div class="time-slot-bracket">
+      <div class="time-slot-title">
+        {{ slot | pretty_time }}
+      </div>
+    </div>
+    <div class="card-deck">
+      {% for event in events %}
+      {% include "workshop.html" %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="footer-spacer"></div>
+
+<footer class="footer fixed-bottom text-center">
+  <div class="container">
+    <p class="schedule-url">
+      <a href="https://coworkingnight.org/schedule">coworkingnight.org/schedule</a>
+    </p>
+    <p class="cwn-sponsors">
+      Sponsored by <a href="https://www.realestaterow.com/" target="_blank">Real Estate Row</a> and <a href="https://hackster.io" target="_blank">Hackster.io</a>. Presented by <a href="https://newleafdigital.org" target="_blank">New Leaf Digital</a>.
+    </p>
+  </div>
+</footer>
+{% endblock %}

@@ -1,0 +1,21 @@
+<div class="card workshop">
+  <div class="card-block">
+    <div class="workshop-icon">
+      <i class="fa fa-pencil fa-4x"></i>
+    </div>
+    <h3 class="card-title workshop-title">
+    <span class="underline">{{ event.title }}</span>
+  </h3>
+    <span class="group-title">
+      <a href="#">
+        {{ event.group }}
+      </a>
+    </span>
+    <span class="workshop-category">{{ category }}</span>
+    <br>
+    <span class="workshop-time">{{ event.start_time | pretty_time }} - {{ event.end_time | pretty_time }}</span>
+    <span class="workshop-location">{{ event.room_req }} </span>
+    <p class="card-text workshop-description">{{ event.description }}</p>
+  </div>
+</div>
+
