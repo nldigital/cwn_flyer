@@ -194,7 +194,7 @@ def make_schedule(weekno):
 def current_week():
     today = datetime.date.today()
     for cwn, date in CWN.items():
-        if today > date.date():
+        if today > (date.date() + datetime.timedelta(days=1)):
             continue
         else:
             return cwn

@@ -296,3 +296,16 @@ footer.fixed-bottom p {
     display:block;
   }
 }
+
+.workshop-icon {
+    text-align: center;
+}
+
+.workshop-icon i {
+    height: 1em;
+    width: 1em;
+}
+
+.workshop-category {
+    white-space: nowrap;
+}
