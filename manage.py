@@ -11,7 +11,7 @@ from cwn_flyer import create_app
 
 # default to dev config because no one should use this in
 # production anyway
-env = os.environ.get('APPNAME_ENV', 'prod')
+env = os.environ.get('APPNAME_ENV', 'dev')
 app = create_app('cwn_flyer.settings.%sConfig' % env.capitalize(), env=env)
 
 manager = Manager(app)

@@ -150,17 +150,26 @@ def get_events():
         if event['approved'] == 'TRUE':
             events.append(event)
 
+    new_events = []
+
     for event in events:
         event['approved'] = bool(event['approved'])
         event['cwn'] = int(event['cwn'])
-        event['start_time'] = datetime.datetime.strptime(event['start_time'], "%m/%d/%Y %H:%M:%S")
-        event['end_time'] = datetime.datetime.strptime(event['end_time'], "%m/%d/%Y %H:%M:%S")
+        try:
+            event['start_time'] = datetime.datetime.strptime(event['start_time'], "%m/%d/%Y %H:%M:%S")
+        except:
+            continue
+        try:
+            event['end_time'] = datetime.datetime.strptime(event['end_time'], "%m/%d/%Y %H:%M:%S")
+        except:
+            continue
 
         if event['icon'] == '':
             event['icon'] = 'pencil'
         else:
             event['icon'] = event['icon'].lower()
-    return events
+        new_events.append(event)
+    return new_events
 
 
 
