@@ -8,6 +8,7 @@ from flask import Flask
 from webassets.loaders import PythonLoader as PythonAssetsLoader
 
 from cwn_flyer.controllers.main import main
+from cwn_flyer.controllers.openhsv import openhsv
 from cwn_flyer import assets
 
 from cwn_flyer.extensions import (
@@ -28,4 +29,5 @@ def create_app(object_name, env="prod"):
     for name, bundle in assets_loader.load_bundles().items():
         assets_env.register(name, bundle)
     app.register_blueprint(main)
+    app.register_blueprint(openhsv)
     return app
