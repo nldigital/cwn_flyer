@@ -16,7 +16,7 @@ from cwn_flyer.extensions import cache
 import httplib2
 import os
 
-openhsv = Blueprint('openhsv', __name__, url_prefix='/openhsv')
+openhsv = Blueprint('openhsv', __name__, url_prefix='/')
 
 TIME_SLOTS = [
         datetime.time(18, 00, 00),

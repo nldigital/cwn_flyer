@@ -20,7 +20,7 @@ from oauth2client.file import Storage
 
 import os
 
-main = Blueprint('main', __name__)
+main = Blueprint('main', __name__, url_prefix='/sheets')
 
 TIME_SLOTS = [
         datetime.time(18, 00, 00),
