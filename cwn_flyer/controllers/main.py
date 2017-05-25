@@ -10,8 +10,6 @@ import pytz
 
 from collections import OrderedDict
 
-from cwn_flyer.extensions import cache
-
 import httplib2
 from apiclient import discovery
 from oauth2client import client
@@ -172,7 +170,6 @@ def get_events():
 
 
 
-@cache.cached(timeout=1000)
 def make_schedule(weekno):
     events = get_events()
     filtered_results = OrderedDict()

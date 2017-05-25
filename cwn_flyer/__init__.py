@@ -2,7 +2,7 @@
 
 import os
 import logging
-
+from logging.handlers import RotatingFileHandler
 
 from flask import Flask
 from webassets.loaders import PythonLoader as PythonAssetsLoader
@@ -28,6 +28,10 @@ def create_app(object_name, env="prod"):
     assets_loader = PythonAssetsLoader(assets)
     for name, bundle in assets_loader.load_bundles().items():
         assets_env.register(name, bundle)
-    app.register_blueprint(main)
+    #app.register_blueprint(main)
     app.register_blueprint(openhsv)
+
+    handler = RotatingFileHandler('cwn_flyer.log', maxBytes=10000, backupCount=1)
+    handler.setLevel(logging.INFO)
+    app.logger.addHandler(handler)
     return app

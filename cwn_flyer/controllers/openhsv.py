@@ -1,6 +1,7 @@
 
 from flask import Blueprint, render_template, flash, request, redirect, url_for, abort, jsonify
 from flask import current_app
+from flask import Flask
 
 from urllib.request import urlopen
 import simplejson
@@ -11,14 +12,14 @@ import pytz
 
 from collections import OrderedDict
 
-from cwn_flyer.extensions import cache
-
 import httplib2
 import os
 
-openhsv = Blueprint('openhsv', __name__, url_prefix='/')
+openhsv = Blueprint('openhsv', __name__)
 
 TIME_SLOTS = [
+        datetime.time(17, 00, 00),
+        datetime.time(17, 30, 00),
         datetime.time(18, 00, 00),
         datetime.time(18, 30, 00),
         datetime.time(19, 00, 00),
@@ -49,7 +50,17 @@ CWN_TEXT = """12/07/2016	85
 05/03/2017	103
 05/10/2017	104
 05/17/2017	105
-05/24/2017	106"""
+05/24/2017	106
+05/31/2017      107
+06/07/2017	108
+06/14/2017	109
+06/21/2017	110
+06/28/2017	111
+07/05/2017      112
+07/12/2017	113
+07/19/2017	114
+07/26/2017	115
+08/02/2017	116"""
 
 CWN = OrderedDict()
 
@@ -74,11 +85,12 @@ def _jinja2_filter_datetime(input, fmt=None):
     return s
 
 def get_events(weekno):
-    events = []
-    if (weekno == current_week()):
-        events = json.loads(urlopen("http://openhsv.com/api/v1/cwn_flyer").read().decode('utf-8'))
-    else:
-        events = json.loads(urlopen("http://openhsv.com/api/v1/cwn_flyer/" + str(weekno)).read().decode('utf-8'))
+    events = []  
+    try:
+        req = urlopen("http://www.openhuntsville.com/api/v1/cwn_flyer/" + str(weekno), timeout=1).read().decode('utf-8')
+    except:
+        return events 
+    events = json.loads(req)
     events_parsed = []
     utc = pytz.timezone("UTC")
     local = pytz.timezone("America/Chicago")
@@ -90,8 +102,8 @@ def get_events(weekno):
     return events_parsed
 
 
-@cache.cached(timeout=1000)
 def make_schedule(weekno):
+    current_app.logger.info('Rendering schedule for event %s'%str(weekno))
     events = get_events(weekno)
     filtered_results = OrderedDict()
     utc = pytz.timezone("UTC")
@@ -115,8 +127,17 @@ def make_schedule(weekno):
     for key in to_del:
         del filtered_results[key]
 
+    meta = []
+    meta.append('<meta property="og:title" content="Coworking Night #%i" />')
+    meta.append('<meta property="og:type" content="event" />')
+    meta.append('<meta property="og:url" content="http://atcwn.nld.to" />')
+    meta.append('<meta property="og:description" content="CoWorking Night is a free weekly conference where professionals come to learn, connect, and collaborate.  Each week features a new lineup of workshops.  See what\'s happening this week!" />') 
+    meta.append('<meta property="og:site_name" content="CoWorking Night" />')
+    meta = '\n'.join(meta)
 
-    return render_template('index.html', slotted_events=filtered_results, weekno=weekno, date=CWN[weekno], title="CoWorking Night Flyer")
+    print(CWN)
+
+    return render_template('index.html', slotted_events=filtered_results, weekno=weekno, date=CWN[weekno], title="CoWorking Night Flyer #%i"%weekno, metadata=meta)
 
 def current_week():
     today = datetime.date.today()
@@ -129,19 +150,41 @@ def current_week():
 def next_week():
     return current_week() + 1
 
-@openhsv.route('/', methods=['GET'])
-def home():
-    return make_schedule(current_week())
+
+def has_no_empty_params(rule):
+    defaults = rule.defaults if rule.defaults is not None else ()
+    arguments = rule.arguments if rule.arguments is not None else ()
+    return len(defaults) >= len(arguments)
+
+def links():
+    links = []
+    for rule in current_app.url_map.iter_rules():
+        if "GET" in rule.methods and has_no_empty_params(rule):
+            url = url_for(rule.endpoint, **(rule.defaults or {}))
+            links.append((url, rule.endpoint))
+    return links
+
+
+@openhsv.route('/site-map')
+def site_map():
+    return jsonify(links())
+    
 
 @openhsv.route('/schedule', methods=['GET'])
 def schedule():
     return make_schedule(current_week())
 
-@openhsv.route('/schedule/<event_id>')
+@openhsv.route('/schedule/<event_id>', methods=['GET'])
 def schedule_event(event_id):
+    current_app.logger.info('Rendering schedule for event %s'%str(event_id))
     if event_id == "current":
         return make_schedule(current_week())
     if event_id == "next":
         return make_schedule(next_week())
     return make_schedule(int(event_id))
+
+@openhsv.route('/', methods=['GET'])
+def home():
+    current_app.logger.info(links())
+    return make_schedule(current_week())
 
