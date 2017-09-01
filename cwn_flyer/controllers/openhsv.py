@@ -1,5 +1,5 @@
 
-from flask import Blueprint, render_template, flash, request, redirect, url_for, abort, jsonify
+from flask import Blueprint, render_template, url_for, jsonify
 from flask import current_app
 from flask import Flask
 
@@ -9,7 +9,7 @@ import json
 
 import datetime
 import pytz
-import hashlib 
+import hashlib
 
 from collections import OrderedDict
 
@@ -94,11 +94,11 @@ def _jinja2_filter_datetime(input, fmt=None):
     return s
 
 def get_events(weekno):
-    events = []  
+    events = []
     try:
         req = urlopen("http://www.openhuntsville.com/api/v1/cwn_flyer/" + str(weekno), timeout=1).read().decode('utf-8')
     except:
-        return events 
+        return events
     events = json.loads(req)
     events_parsed = []
     utc = pytz.timezone("UTC")
@@ -179,15 +179,15 @@ def sitemap_txt():
     vals.append(base + "schedule/next")
     for val in CWN.keys():
         vals.append(base + "schedule/%i"%val)
-    return "\n".join(vals) 
+    return "\n".join(vals)
 
 @openhsv.route('/robots.txt')
 def robots_txt():
     vals = []
     vals.append('Sitemap: http://atcwn.nld.to/sitemap.txt')
-    return "\n".join(vals) 
+    return "\n".join(vals)
 
-    
+
 
 @openhsv.route('/schedule', methods=['GET'])
 def schedule():
