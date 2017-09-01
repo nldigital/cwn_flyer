@@ -9,6 +9,7 @@ import json
 
 import datetime
 import pytz
+import hashlib 
 
 from collections import OrderedDict
 
@@ -51,16 +52,24 @@ CWN_TEXT = """12/07/2016	85
 05/10/2017	104
 05/17/2017	105
 05/24/2017	106
-05/31/2017      107
+05/31/2017	107
 06/07/2017	108
 06/14/2017	109
 06/21/2017	110
 06/28/2017	111
-07/05/2017      112
+07/05/2017	112
 07/12/2017	113
 07/19/2017	114
 07/26/2017	115
-08/02/2017	116"""
+08/02/2017	116
+08/09/2017	117
+08/16/2017	118
+08/23/2017	119
+08/30/2017	120
+09/06/2017	121
+09/13/2017	122
+09/20/2017	123
+09/27/2017	124"""
 
 CWN = OrderedDict()
 
@@ -127,17 +136,9 @@ def make_schedule(weekno):
     for key in to_del:
         del filtered_results[key]
 
-    meta = []
-    meta.append('<meta property="og:title" content="Coworking Night #%i" />')
-    meta.append('<meta property="og:type" content="event" />')
-    meta.append('<meta property="og:url" content="http://atcwn.nld.to" />')
-    meta.append('<meta property="og:description" content="CoWorking Night is a free weekly conference where professionals come to learn, connect, and collaborate.  Each week features a new lineup of workshops.  See what\'s happening this week!" />') 
-    meta.append('<meta property="og:site_name" content="CoWorking Night" />')
-    meta = '\n'.join(meta)
+    hashval=hashlib.md5(("http://atcwn.nld.to/schedule/%i%s"%(weekno, "PANCAKES")).encode('utf-8')).hexdigest()
 
-    print(CWN)
-
-    return render_template('index.html', slotted_events=filtered_results, weekno=weekno, date=CWN[weekno], title="CoWorking Night Flyer #%i"%weekno, metadata=meta)
+    return render_template('index.html', slotted_events=filtered_results, weekno=weekno, date=CWN[weekno], title="CoWorking Night Flyer #%i"%weekno, hashval=hashval)
 
 def current_week():
     today = datetime.date.today()
@@ -168,6 +169,24 @@ def links():
 @openhsv.route('/site-map')
 def site_map():
     return jsonify(links())
+
+@openhsv.route('/sitemap.txt')
+def sitemap_txt():
+    vals = []
+    base = "http://atcwn.nld.to/"
+    vals.append(base + "schedule")
+    vals.append(base + "schedule/current")
+    vals.append(base + "schedule/next")
+    for val in CWN.keys():
+        vals.append(base + "schedule/%i"%val)
+    return "\n".join(vals) 
+
+@openhsv.route('/robots.txt')
+def robots_txt():
+    vals = []
+    vals.append('Sitemap: http://atcwn.nld.to/sitemap.txt')
+    return "\n".join(vals) 
+
     
 
 @openhsv.route('/schedule', methods=['GET'])

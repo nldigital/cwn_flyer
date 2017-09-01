@@ -1,5 +1,40 @@
 {%extends "base.html"%}
 {%block title%}{{ title }}{% endblock %}
+{%block meta%}
+<meta property="og:type" content="event">
+<meta property="og:url" content="http://atcwn.nld.to" />
+<meta property="og:image" content="http://api.screenshotmachine.com/?key=cc48ac&dimension=1200x630&format=png&hash={{hashval}}&cacheLimit=0.5&url=http://atcwn.nld.to/schedule/{{ weekno }}" />
+<meta property="og:description" content="CoWorking Night is a free weekly conference where professionals come to learn, connect, and collaborate.  Each week features a new lineup of workshops.  See what's happening this week!" />
+<meta property="og:site_name" content="CoWorking Night">
+<script type="application/ld+json">
+	{
+		"@context": "http://schema.org",
+		"@type": "Event",
+		"name": "CoWorking Night #{{weekno}} Schedule",
+		"startDate": "Wednesday, {{date.strftime("%B %d, %Y")}} 06:00pm",
+		"endDate": "Wednesday, {{date.strftime("%B %d, %Y")}} 10:00pm",
+		"offers": {
+			"@type": "Offer",
+			"price": "0"
+		},
+		"image": "http://api.screenshotmachine.com/?key=cc48ac&dimension=1200x630&format=png&hash={{hashval}}&cacheLimit=0.5&url=http://atcwn.nld.to/schedule/{{ weekno }}",
+		"description": "CoWorking Night is a free weekly conference where professionals come to learn, connect, and collaborate.  Each week features a new lineup of workshops.  See what's happening this week!",
+		"location": {
+			"@type": "Place",
+			"sameAs": "",
+			"name": "Real Estate Row",
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "1806 University Drive NW",
+				"addressLocality": "Huntsville",
+				"addressRegion": "AL",
+				"addressRegion": "35801",
+				"postalCode": "US"
+			}
+		}
+	}
+</script>
+{%endblock%}
 
 
 {%block body%}
