@@ -13,7 +13,7 @@
     </span>
     <span class="workshop-category">{{ event.category }}</span>
     <br>
-    <span class="workshop-time">{{ event.start_time | pretty_time }} - {{ event.end_time | pretty_time }}</span>
+    <span class="workshop-time">{{ moment(event.start_time).format('h:mm') }} - {{ moment(event.end_time).format('h:mm') }}</span>
     <span class="workshop-location">{{ event.room_req }} </span>
     <p class="card-text workshop-description">{{ event.description }}</p>
   </div>

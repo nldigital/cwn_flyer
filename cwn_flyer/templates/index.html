@@ -53,7 +53,7 @@
   <div class="time-slot">
     <div class="time-slot-bracket">
       <div class="time-slot-title">
-        {{ slot | pretty_time }}
+          {{ moment(slot).format('h:mm') }}
       </div>
     </div>
     <div class="card-deck">

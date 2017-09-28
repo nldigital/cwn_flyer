@@ -14,21 +14,25 @@
         {% block meta %}
         {% endblock %}
 
-        {% assets "common_css" %}
-            <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
-        {% endassets %}
-
         {% block css %}
         {% endblock %}
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/vendor/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/vendor/font-awesome.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/vendor/Raleway.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+        {{ moment.include_jquery() }}
+        {{ moment.include_moment() }}
+        <script src="{{ url_for('static', filename='js/vendor/jquery-3.1.1.slim.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/vendor/tether.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/vendor/bootstrap.min.js') }}"></script>
+
     </head>
 
     <body>
     	{% block body %}
     	{% endblock %}
-
-        {% assets "common_js" %}
-            <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-        {% endassets %}
 
         {% block js %}
         {% endblock %}
